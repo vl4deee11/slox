@@ -1,0 +1,25 @@
+apiVersion: sloth.slok.dev/v1
+kind: PrometheusServiceLevel
+metadata:
+    name: sloth-slo-auth-login-0
+    namespace: auth-login
+spec:
+    labels:
+        owner: auth
+        repo: https://github.com/some/service
+        tier: "1"
+    service: auth-login
+    slos:
+        - name: main_sli
+          alerting:
+            name: main_sli_alert
+            pageAlert:
+                disable: true
+            ticketAlert:
+                disable: true
+          description: main_sli
+          objective: 99.9
+          sli:
+            events:
+                errorQuery: (0.500000 * ((0.300000 * ((1.000000 * (((sum(rate(some_metrics_second{code=~"5.*"}[{{.window}}])))/(sum(rate(some_metrics_second{}[{{.window}}])))) or vector(0))))) + (0.700000 * (((sum(rate(some_metrics{code=~"5.*"}[{{.window}}])))/(sum(rate(some_metrics{}[{{.window}}])))) or vector(0))))) + (0.450000 * ((0.300000 * (((sum(rate(some_metrics_third_v1{code=~"5.*"}[{{.window}}])))/(sum(rate(some_metrics_third_v1{}[{{.window}}])))) or vector(0))) + (0.700000 * (((sum(rate(some_metrics_third_v2{code=~"5.*"}[{{.window}}])))/(sum(rate(some_metrics_third_v2{}[{{.window}}])))) or vector(0)))))
+                totalQuery: 1+sum(rate(sloth_slo_info[{{.window}}]))
